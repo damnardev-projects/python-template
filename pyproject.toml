@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "python-template"
+version = "0.0.1"
+description = "Simple Python project template"
+readme = "README.md"
+
+packages = [{ include = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.14,<3.16"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^9.1.1"
+pytest-cov = "^7.1.0"
+pyinstaller = "^6.21.0"
+
+[tool.poetry.scripts]
+hello = "src.hello:poetry"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if __name__ == .__main__.:",
+]
+show_missing = true
+
+[tool.pytest.ini_options]
+addopts = "--cov=src --cov-report=xml"
+testpaths = ["tests"]

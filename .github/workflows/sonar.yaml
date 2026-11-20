@@ -1,0 +1,38 @@
+name: Sonar
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  compile-verify:
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: read
+      contents: read
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+        with:
+          python-version: "3.14"
+
+      - name: Install Poetry
+        run: pip install -r requirements.txt
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run tests with coverage
+        run: poetry run pytest
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@59202af334b4ba7b5db01b701b8e79f8b3bef0f4
+        env:
+          SONAR_HOST_URL: ${{ vars.SONAR_URI }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
